@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="210mm" viewBox="0 0 297 210" font-family="monospace" font-size="3.5">
+  <title>OPENLAB wind turbine model — blade and hub template (A4, 1:1)</title>
+  <desc>Three tapered blades cut from a PET bottle or thin plastic sheet, plus a hub disc. The blade root is 25 mm wide, the tip 12 mm; twist each blade 15–20 degrees at the hub when mounting. Hub disc has a 5 mm centre hole for a 608-bearing axle spacer or a pencil.</desc>
+  <rect width="297" height="210" fill="#fff"/>
+  <g fill="none" stroke="#f00" stroke-width="0.25">
+    <!-- three blades, 120 mm long -->
+    <path id="blade" d="M20 40 h25 c10 20 10 60 -6 118 h-13 c-6 -60 -6 -98 -6 -118 z"/>
+    <use href="#blade" x="50"/><use href="#blade" x="100"/>
+    <!-- mounting holes at the root of each blade (M3) -->
+    <circle cx="32" cy="50" r="1.6"/><circle cx="82" cy="50" r="1.6"/><circle cx="132" cy="50" r="1.6"/>
+    <!-- hub disc: 70 mm, three slots at 120° for the blade roots, 5 mm centre hole -->
+    <g transform="translate(225,95)">
+      <circle r="35"/><circle r="2.5"/>
+      <circle cx="0" cy="-22" r="1.6"/>
+      <circle cx="19.05" cy="11" r="1.6"/>
+      <circle cx="-19.05" cy="11" r="1.6"/>
+      <line x1="0" y1="-30" x2="0" y2="-14" stroke-dasharray="1.5 1"/>
+      <line x1="25.98" y1="15" x2="12.1" y2="7" stroke-dasharray="1.5 1"/>
+      <line x1="-25.98" y1="15" x2="-12.1" y2="7" stroke-dasharray="1.5 1"/>
+    </g>
+    <!-- tail vane -->
+    <path d="M180 150 h60 l-15 25 h-45 z"/>
+  </g>
+  <g fill="#000">
+    <text x="20" y="30">OPENLAB / wind-turbine-blade.svg — red = cut from a 2 L PET bottle side wall (curve gives camber)</text>
+    <text x="20" y="170">Blades: root 25 mm, tip 12 mm, length 120 mm. Mount with a 15–20° pitch; bend the root at the dashed radial lines.</text>
+    <text x="20" y="176">Hub: 70 mm disc from bottle-base plastic or card; 5 mm centre hole. Balance by trimming the heaviest tip.</text>
+    <text x="180" y="185">tail vane (optional, for yaw)</text>
+    <text x="20" y="200">License CC BY-SA 4.0 — anantamracing.com/hackathon/openlab/</text>
+  </g>
+</svg>

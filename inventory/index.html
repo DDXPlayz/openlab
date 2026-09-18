@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inventory — OPENLAB</title>
+<meta name="description" content="List the parts you already have and OPENLAB shows which STEM projects you can build now, which are one or two parts away, and what to buy next to unlock the most projects.">
+<link rel="canonical" href="https://anantamracing.com/hackathon/openlab/inventory/">
+<meta name="theme-color" content="#f6f8fa">
+<meta property="og:title" content="Inventory — OPENLAB">
+<meta property="og:description" content="What can I build with what I have? Paste your parts list and find out.">
+<link rel="icon" type="image/svg+xml" href="/hackathon/openlab/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/hackathon/openlab/openlab.css?v=3">
+<script>try{var t=JSON.parse(localStorage.getItem('openlab:v1')||'{}').theme;if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body>
+<main id="main" class="wrap page">
+  <h1>Inventory mode</h1>
+  <p class="muted" style="max-width:70ch">List what you have, one item per line or comma-separated, with quantities if you like (“2 LEDs”, “ldr x2”). Synonyms are matched against the component catalogue. Every project is scored by how many of its <em>core</em> components you already own.</p>
+  <div class="layout-sidebar-left" style="grid-template-columns: 340px minmax(0,1fr)">
+    <form id="inv-form" class="box"><div class="box-header">your parts <span class="xs muted">saved in this browser</span></div><div class="box-body">
+      <label class="visually-hidden" for="have">Inventory list</label>
+      <textarea class="input mono" id="have" rows="8" placeholder="Arduino Uno, LDR, Servo, 2 LEDs, Cardboard"></textarea>
+      <label class="check" style="margin-top:.5rem"><input type="checkbox" id="household" checked> assume common household items (tape, string, jars, bottles, cardboard, salt…) are available</label>
+      <div class="row" style="margin-top:.6rem"><button class="btn btn-primary" type="submit">match projects</button><button class="btn" type="button" id="example">use example</button><button class="btn" type="button" id="clear">clear</button></div>
+      <div id="parsed" style="margin-top:1rem" aria-live="polite"></div>
+    </div></form>
+    <section id="out" aria-live="polite"></section>
+  </div>
+</main>
+<script type="module" src="../js/pages/inventory.js"></script>
+</body>
+</html>

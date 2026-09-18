@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="210mm" viewBox="0 0 297 210" font-family="monospace" font-size="3.5">
+  <title>OPENLAB tactile graph kit — laser-cut / embossing grid (A4 landscape, 1:1)</title>
+  <desc>A 10 mm coordinate grid with raised axes. Red lines = cut (laser, 3 mm ply/acrylic) for the board outline and pin holes; blue lines = engrave/score (grid); black = engrave deep (axes). For a cardboard version, prick the grid intersections with a push pin from the back to raise dots.</desc>
+  <rect width="297" height="210" fill="#fff"/>
+  <!-- board outline: cut -->
+  <rect x="10" y="10" width="277" height="190" fill="none" stroke="#f00" stroke-width="0.2"/>
+  <!-- grid: score lines every 10 mm, 24 columns x 16 rows, origin at (30,180) -->
+  <g stroke="#00f" stroke-width="0.15" fill="none">
+    <path d="M30 20V180M40 20V180M50 20V180M60 20V180M70 20V180M80 20V180M90 20V180M100 20V180M110 20V180M120 20V180M130 20V180M140 20V180M150 20V180M160 20V180M170 20V180M180 20V180M190 20V180M200 20V180M210 20V180M220 20V180M230 20V180M240 20V180M250 20V180M260 20V180M270 20V180"/>
+    <path d="M30 20H270M30 30H270M30 40H270M30 50H270M30 60H270M30 70H270M30 80H270M30 90H270M30 100H270M30 110H270M30 120H270M30 130H270M30 140H270M30 150H270M30 160H270M30 170H270M30 180H270"/>
+  </g>
+  <!-- axes: deep engrave (raised when the board is a negative mould, or glue a pipe cleaner along them) -->
+  <g stroke="#000" stroke-width="0.8" fill="none">
+    <line x1="30" y1="180" x2="270" y2="180"/>
+    <line x1="150" y1="20" x2="150" y2="180"/>
+  </g>
+  <!-- pin holes every 10 mm at grid intersections: 1.6 mm cut holes for push pins / pegs -->
+  <g fill="none" stroke="#f00" stroke-width="0.15">
+    <!-- one row of holes rendered explicitly; the laser file is used with "use" copies -->
+    <g id="holerow">
+      <circle cx="30" cy="180" r="0.8"/><circle cx="40" cy="180" r="0.8"/><circle cx="50" cy="180" r="0.8"/><circle cx="60" cy="180" r="0.8"/><circle cx="70" cy="180" r="0.8"/><circle cx="80" cy="180" r="0.8"/><circle cx="90" cy="180" r="0.8"/><circle cx="100" cy="180" r="0.8"/><circle cx="110" cy="180" r="0.8"/><circle cx="120" cy="180" r="0.8"/><circle cx="130" cy="180" r="0.8"/><circle cx="140" cy="180" r="0.8"/><circle cx="150" cy="180" r="0.8"/><circle cx="160" cy="180" r="0.8"/><circle cx="170" cy="180" r="0.8"/><circle cx="180" cy="180" r="0.8"/><circle cx="190" cy="180" r="0.8"/><circle cx="200" cy="180" r="0.8"/><circle cx="210" cy="180" r="0.8"/><circle cx="220" cy="180" r="0.8"/><circle cx="230" cy="180" r="0.8"/><circle cx="240" cy="180" r="0.8"/><circle cx="250" cy="180" r="0.8"/><circle cx="260" cy="180" r="0.8"/><circle cx="270" cy="180" r="0.8"/>
+    </g>
+    <use href="#holerow" y="-10"/><use href="#holerow" y="-20"/><use href="#holerow" y="-30"/><use href="#holerow" y="-40"/><use href="#holerow" y="-50"/><use href="#holerow" y="-60"/><use href="#holerow" y="-70"/><use href="#holerow" y="-80"/><use href="#holerow" y="-90"/><use href="#holerow" y="-100"/><use href="#holerow" y="-110"/><use href="#holerow" y="-120"/><use href="#holerow" y="-130"/><use href="#holerow" y="-140"/><use href="#holerow" y="-150"/><use href="#holerow" y="-160"/>
+  </g>
+  <!-- braille-style tactile axis labels: every 50 mm, a notch on the board edge (cut) -->
+  <g stroke="#f00" stroke-width="0.2" fill="none">
+    <path d="M50 200v-3M100 200v-3M150 200v-5M200 200v-3M250 200v-3"/>
+    <path d="M10 130h3M10 80h3M10 30h3"/>
+  </g>
+  <g fill="#000">
+    <text x="12" y="16">OPENLAB / tactile-graph-grid.svg — red: cut · blue: score · black: deep engrave. Origin (0,0) at the centre of the x-axis. Edge notches every 5 units; a longer notch marks x = 0.</text>
+    <text x="12" y="206">License CC BY-SA 4.0 — anantamracing.com/hackathon/openlab/</text>
+  </g>
+</svg>

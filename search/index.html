@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search — OPENLAB</title>
+<meta name="description" content="Search OPENLAB's STEM project catalogue by subject, age, difficulty, budget, components, project type and accessibility. Shareable URLs.">
+<link rel="canonical" href="https://anantamracing.com/hackathon/openlab/search/">
+<meta name="theme-color" content="#f6f8fa">
+<meta property="og:title" content="Search — OPENLAB">
+<meta property="og:description" content="Find low-cost STEM projects by subject, budget, components and accessibility.">
+<link rel="icon" type="image/svg+xml" href="/hackathon/openlab/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/hackathon/openlab/openlab.css?v=3">
+<script>try{var t=JSON.parse(localStorage.getItem('openlab:v1')||'{}').theme;if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body>
+<main id="main" class="wrap page">
+  <h1>Search the catalogue</h1>
+  <form class="search-box" id="search-form" role="search" style="margin-bottom:1rem">
+    <label class="visually-hidden" for="q">Search query</label>
+    <input class="input" id="q" name="q" type="search" placeholder="title, tag, component, step…" autocomplete="off">
+    <button class="btn btn-primary" type="submit">search</button>
+  </form>
+  <div class="layout-sidebar-left">
+    <aside aria-label="Filters">
+      <form id="filters" class="box">
+        <div class="box-header"><span>filters</span><button class="btn btn-sm" type="button" id="clear">clear all</button></div>
+        <div class="box-body stack">
+          <fieldset><legend>subject</legend><div id="f-subject"></div></fieldset>
+          <fieldset><legend>suitable for age</legend>
+            <label class="check"><input type="radio" name="age" value="" checked> any</label>
+            <label class="check"><input type="radio" name="age" value="10"> 10+</label>
+            <label class="check"><input type="radio" name="age" value="13"> 13+</label>
+            <label class="check"><input type="radio" name="age" value="16"> 16+</label>
+          </fieldset>
+          <fieldset><legend>difficulty</legend><div id="f-diff"></div></fieldset>
+          <fieldset><legend>budget</legend>
+            <label class="lbl" for="max">max cost as listed: <strong id="max-label">any</strong></label>
+            <input type="range" id="max" min="0" max="3000" step="50" value="3000">
+            <p class="hint">Listed cost before cost-down. Use <a href="../costdown/">cost-down</a> to fit projects to a budget.</p>
+          </fieldset>
+          <fieldset><legend>project type</legend><div id="f-type"></div></fieldset>
+          <fieldset><legend>accessibility</legend><label class="check"><input type="checkbox" id="f-acc"> has adaptations (low vision / motor / hearing)</label></fieldset>
+          <fieldset><legend>exclude projects that…</legend><div id="f-excl"></div></fieldset>
+          <fieldset><legend>uses component</legend>
+            <label class="lbl" for="comp-pick">add component</label>
+            <select class="input mono" id="comp-pick"><option value="">— choose —</option></select>
+            <div class="row" id="f-comp" style="margin-top:.5rem"></div>
+          </fieldset>
+        </div>
+      </form>
+    </aside>
+    <section aria-label="Results">
+      <div class="row-between" style="margin-bottom:.75rem">
+        <p class="mono small muted" id="count" aria-live="polite" style="margin:0"></p>
+        <div class="row"><label class="lbl" for="sort" style="margin:0">sort</label>
+          <select class="input mono" id="sort" style="width:auto">
+            <option value="relevance">relevance</option><option value="cost-asc">cost ↑</option><option value="cost-desc">cost ↓</option><option value="difficulty">difficulty</option><option value="rating">rating</option><option value="updated">last updated</option>
+          </select>
+          <button class="btn btn-sm" type="button" id="share">copy link</button></div>
+      </div>
+      <div id="results" class="repo-list"></div>
+    </section>
+  </div>
+</main>
+<script type="module" src="../js/pages/search.js"></script>
+</body>
+</html>

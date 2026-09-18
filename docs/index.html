@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Docs — OPENLAB</title>
+<meta name="description" content="How OPENLAB works: the resource data model, licensing, the search index, the cost-down algorithm, inventory scoring, contribution guidelines, moderation, accessibility and known limitations.">
+<link rel="canonical" href="https://anantamracing.com/hackathon/openlab/docs/">
+<meta name="theme-color" content="#f6f8fa">
+<meta property="og:title" content="Docs — OPENLAB">
+<meta property="og:description" content="Data model, algorithms, licensing, accessibility and limitations of OPENLAB.">
+<link rel="icon" type="image/svg+xml" href="/hackathon/openlab/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/hackathon/openlab/openlab.css?v=3">
+<script>try{var t=JSON.parse(localStorage.getItem('openlab:v1')||'{}').theme;if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body>
+<main id="main" class="wrap page">
+  <div class="layout-sidebar-left">
+    <nav class="doc-tree" aria-label="Documentation">
+      <ul>
+        <li class="tree-group">about</li>
+        <li><a href="#overview">overview</a></li>
+        <li><a href="#data-model">data model</a><ul><li><a href="#components">component catalogue</a></li><li><a href="#prices">prices</a></li></ul></li>
+        <li><a href="#licensing">licensing</a></li>
+        <li class="tree-group">engines</li>
+        <li><a href="#search">search index</a></li>
+        <li><a href="#costdown">cost-down algorithm</a></li>
+        <li><a href="#inventory">inventory scoring</a></li>
+        <li class="tree-group">community</li>
+        <li><a href="#contributing">contribution guidelines</a></li>
+        <li><a href="#moderation">moderation</a></li>
+        <li><a href="#storage">local storage</a></li>
+        <li class="tree-group">quality</li>
+        <li><a href="#accessibility">accessibility</a></li>
+        <li><a href="#limitations">limitations</a></li>
+      </ul>
+    </nav>
+    <article class="prose">
+      <h1 id="overview">OPENLAB documentation</h1>
+      <p class="lede">OPENLAB is a static, client-side open STEM resource ecosystem: a structured project database, a search index, a cost-down engine, an inventory matcher and a local community layer. This page explains exactly how each part works, what the data means, and where it stops.</p>
+      <p>Everything runs in your browser from plain HTML, CSS and ES modules. There is no server, no account and no analytics. The catalogue currently holds <strong id="n-res">…</strong> resources built from <strong id="n-comp">…</strong> catalogue components; both numbers are read from the data files at page load.</p>
+
+      <h2 id="data-model">Data model</h2>
+      <p>Each resource is a record in <code>js/resources.js</code> with these fields. The shape is deliberately close to a repository: it has a README, a bill of materials, code, CAD, a version history and issues.</p>
+      <div class="table-wrap"><table class="tbl"><thead><tr><th>field</th><th>type</th><th>notes</th></tr></thead><tbody>
+        <tr><td class="mono">id</td><td>slug</td><td>URL key: <code>resource/?id=slug</code></td></tr>
+        <tr><td class="mono">title, description</td><td>string</td><td>description is 2–4 sentences</td></tr>
+        <tr><td class="mono">difficulty</td><td>Beginner · Intermediate · Advanced</td><td></td></tr>
+        <tr><td class="mono">domains</td><td>string[]</td><td>one or more of the eight subjects</td></tr>
+        <tr><td class="mono">ageMin</td><td>number</td><td>shown as “13+”; the age filter keeps resources with ageMin ≤ the chosen age</td></tr>
+        <tr><td class="mono">type</td><td>hardware · software · mixed</td><td></td></tr>
+        <tr><td class="mono">requires</td><td>string[]</td><td>microcontroller, computer, soldering, mains, sharp, heat, chemicals — used by the “exclude” filters</td></tr>
+        <tr><td class="mono">components</td><td>{id, qty, core, note}[]</td><td>id references the catalogue; <code>core</code> marks components the project cannot work without</td></tr>
+        <tr><td class="mono">cost, coreCost</td><td>number (computed)</td><td>Σ qty × unit cost; never typed by hand</td></tr>
+        <tr><td class="mono">tools, steps</td><td>string[]</td><td>steps ≥ 6, written as real instructions</td></tr>
+        <tr><td class="mono">code</td><td>{name, lang, filename, content}[]</td><td>runnable snippets: Arduino C++, Python, JavaScript/HTML</td></tr>
+        <tr><td class="mono">cad</td><td>{file, kind, description}[]</td><td>real files in <code>cad/</code>: OpenSCAD source and SVG cut/print templates</td></tr>
+        <tr><td class="mono">safety</td><td>{hazard, mitigation}[]</td><td>specific to the build, not generic</td></tr>
+        <tr><td class="mono">accessibility</td><td>{lowVision, motor, hearing, textOnly}</td><td>what adaptations exist; “has adaptations” filter</td></tr>
+        <tr><td class="mono">license</td><td>string</td><td>CC BY-SA 4.0 for write-ups and CAD, MIT for code-heavy resources</td></tr>
+        <tr><td class="mono">versions</td><td>{version, date, message, author}[]</td><td>≥ 2 entries; a short hash is derived for display</td></tr>
+        <tr><td class="mono">tags</td><td>string[]</td><td>indexed by search</td></tr>
+      </tbody></table></div>
+
+      <h3 id="components">Component catalogue</h3>
+      <p>Components live in <code>js/components.js</code>. Each has an id, a name, a category, a unit cost, synonyms (used by inventory matching and search), and an ordered list of <em>alternatives</em>. An alternative carries the id of another catalogue component, a numeric <code>impact</code> from 0 (identical) to 1 (project no longer works), a plain-language <code>impactText</code> describing what changes, and an availability note. Items flagged <code>salvage</code> cost ₹0 and are things you can typically find: an old CD, a phone camera, a cardboard box, scrap wire. Items flagged <code>assumedOwned</code> (your phone, a browser, a school computer) are treated as available by default.</p>
+
+      <h3 id="prices">Prices</h3>
+      <p>Unit costs are indicative Indian street prices in INR for 2026, rounded to what a student would actually pay at a hobby-electronics shop, stationery shop, grocery or online marketplace (an Uno clone ₹450, an SG90 servo ₹110, an LDR ₹8, a 1000 lines/mm grating film ₹600, a 3D-print-service body ₹1,050). Resistors and LEDs are priced per piece even though shops sell them in packs of 10; a resistor assortment is also listed so the inventory matcher can treat a kit as covering every value. Prices vary by city and month; if a listed price is wrong, open an issue on the resource.</p>
+
+      <h2 id="licensing">Licensing</h2>
+      <p>Resource write-ups, instructions and CAD files are published under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> unless a resource says otherwise: you may copy, adapt and redistribute them, including commercially, as long as you credit OPENLAB and share adaptations under the same license. Code snippets in resources marked MIT are under the <a href="https://opensource.org/license/mit">MIT license</a>. Contributions you submit are offered under the license you select in the form; forks inherit the parent's license because CC BY-SA requires it. The OPENLAB site code itself (search, cost-down, inventory, store) is MIT.</p>
+
+      <h2 id="search">Search index</h2>
+      <p>The index is built in the browser at page load from every resource's title, tags, domains, component names and synonyms, description and steps. Text is lower-cased, split on non-alphanumerics and stop-words are removed. Each term is stored with the weight of the best field it appears in: title 6, tags and domains 3, components 2.5, description 1, steps 0.4.</p>
+      <p>For a query, each token scores against a document by exact match (full weight), prefix match (70 %), edit distance 1 for tokens of four or more letters (50 %) or edit distance 2 for seven or more letters (30 %). A document that matches every query token gets a 1.5× boost. Filters (subject, age, difficulty, listed-cost ceiling, required components, type, adaptations, exclusions) are applied after scoring; sort options re-order by cost, difficulty, local rating or last update. The full query state is written to the URL so any search is shareable.</p>
+
+      <h2 id="costdown">Cost-down algorithm</h2>
+      <p>Input: a resource and a budget B. Output: a substitution report.</p>
+      <ol>
+        <li>Compute the original total from the bill of materials.</li>
+        <li>Sort lines by subtotal, most expensive first. For each line while total &gt; B: find the cheapest alternative whose impact keeps the core function. For <em>core</em> components that means impact ≤ 0.6; for <em>optional</em> components any alternative is allowed. Alternatives chain one level (X → Y → Z, impacts added) so a grating film can become a CD via the catalogue. Apply the substitution and record the saving and impact text.</li>
+        <li>If still over budget, drop optional components entirely, most expensive first, recording each as “dropped”.</li>
+        <li>Report original and final totals, savings in ₹ and %, every original → replacement line, the aggregated impact texts, and whether B was met. If not, report the shortfall and list the closest projects that do fit B.</li>
+      </ol>
+      <p>Worked example: the DIY spectrometer lists a 3D-printed body (₹1,050), a USB webcam (₹950) and grating film (₹600) among ₹2,800 of parts. At B = ₹300 the engine swaps the body for a cardboard build (₹40), the webcam for your phone camera (₹0) and the film for a CD segment (₹0), stopping at ₹240 without touching the razor blades, tape, black paper or the optional CFL calibration lamp. The report says what you lose: about 5 nm resolution instead of 1 nm, hand alignment instead of live capture, and some light leaks to tape over.</p>
+      <p>Global mode runs the same routine for every resource and ranks them: projects that fit with fewer compromises first (lower aggregate impact), then cheaper; projects that still do not fit are ordered by shortfall. The threshold 0.6 and the impact scores are editorial judgements recorded in the catalogue, not measurements.</p>
+
+      <h2 id="inventory">Inventory scoring</h2>
+      <p>The inventory text is split on commas, semicolons, new lines and the word “and”. Each fragment is parsed for a leading or trailing quantity (“2 LEDs”, “ldr x2”, “resistor (3)”) and then resolved against the catalogue: exact synonym, singularised synonym, then a token-subset match that prefers the shortest matching synonym. Unmatched fragments are shown as “not in the catalogue” and ignored.</p>
+      <p>Owning a component also satisfies any component it is listed as an alternative of with impact ≤ 0.6 (a Nano covers an Uno requirement), a resistor kit covers every resistor value, an Arduino/ESP board covers the USB cable it ships with, <code>assumedOwned</code> devices are always available, and if the “household items” box is ticked a fixed list of everyday materials (tape, string, jars, bottles, cardboard, salt…) is treated as owned. Every resource is then scored by core coverage = owned core lines ÷ required core lines. 100 % is <em>buildable now</em>; one or two missing core lines is <em>nearly buildable</em>, with the cost of the missing items. “What to buy next” counts, for each missing component across all non-buildable projects, how many projects it would complete on its own and how many it helps, and ranks by that.</p>
+
+      <h2 id="contributing">Contribution guidelines</h2>
+      <ul>
+        <li><strong>Submit a project</strong> only if you have built it. The form requires a 2–4 sentence description, at least one catalogue component, at least six steps and at least one specific hazard with its mitigation. Costs are computed from the catalogue; if a part is not in it, name it in the tools or steps and a moderator will add it.</li>
+        <li><strong>Fork</strong> when you adapted an existing project — cheaper parts, a different age group, an accessibility variant. Say what you changed and why; the fork is linked from the parent's Adaptations tab.</li>
+        <li><strong>Propose an improvement</strong> for corrections to an existing resource: each change is stored as a before/after diff on a named field with your reason.</li>
+        <li><strong>Report an issue</strong> for wrong prices, unclear steps, safety concerns, code that does not compile, unavailable parts or accessibility gaps. Issues appear on the resource's Issues tab immediately.</li>
+        <li><strong>Rate</strong> once per browser per resource; a short review helps more than the stars.</li>
+        <li>Write for a student reading alone: name the exact pin, the exact quantity, the exact hazard. Do not link to videos as a substitute for steps.</li>
+      </ul>
+
+      <h2 id="moderation">Moderation</h2>
+      <p>Every contribution, fork and improvement starts as <code>pending</code>; every issue starts <code>open</code>. The moderation page lists them with approve / needs-changes / reject (or close / invalid / reopen for issues), an optional note shown back to the contributor, and an append-only log of every action. In this build the queue is local: you moderate what you submitted, in the same browser. A hosted deployment would place the same queue behind authentication, publish approved contributions into the catalogue as new resources or new versions, and expose the log publicly. The data structure does not need to change for that.</p>
+
+      <h2 id="storage">Local storage</h2>
+      <p>All state — theme, ratings, issues, contributions, forks, improvements, activity, the moderation log, your inventory text and last budget — is one JSON object under the localStorage key <code>openlab:v1</code>. Every read and write is wrapped in try/catch; if storage is unavailable the site keeps working for the session in memory. The moderation page can export the object as a file or clear it.</p>
+
+      <h2 id="accessibility">Accessibility</h2>
+      <ul>
+        <li>Semantic landmarks on every page, a skip link, headings in order, real buttons and links.</li>
+        <li>Full keyboard operation: tabs use the ARIA tabs pattern with arrow keys, the star rating is a radio group with arrow keys, filters are native form controls, and the mobile menu is a button with <code>aria-expanded</code>.</li>
+        <li>Dynamic regions (results, cost-down output, inventory output, status lines) are <code>aria-live</code>; toasts are role=status.</li>
+        <li>Light and dark themes both meet 4.5:1 for text; colour is never the only signal (chips carry text, progress bars carry numbers, statuses are words).</li>
+        <li>Typography is in rem; layouts reflow to 375 px and survive 200 % zoom; <code>prefers-reduced-motion</code> disables transitions.</li>
+        <li>Every resource records adaptations for low vision, motor and hearing needs plus a text-only description of the result, and two resources (the Braille board and the tactile graph kit) exist specifically for blind students.</li>
+      </ul>
+
+      <h2 id="limitations">Limitations</h2>
+      <ul>
+        <li>Prices are indicative and will drift; they are not fetched from any shop.</li>
+        <li>Impact scores and the 0.6 core threshold are editorial, not measured. The engine cannot know that a substitution which is fine for one classroom is unacceptable for another.</li>
+        <li>Alternatives are chained only one level deep, and the engine substitutes greedily by line cost; it does not search for the globally optimal combination.</li>
+        <li>Inventory matching is by synonym, not by specification: “a servo” matches an SG90 even if yours is a larger one, and it cannot tell a 5 V from a 3.3 V module.</li>
+        <li>The community layer is local to one browser. Ratings are your own rating; there is no aggregate across users, and the activity feed only shows what happened in this browser.</li>
+        <li>CAD previews render SVGs inline and show OpenSCAD source; STL rendering is not done in the browser.</li>
+        <li>Code snippets are written to compile against the named libraries but are not run in CI here; report an issue if one fails.</li>
+      </ul>
+    </article>
+  </div>
+</main>
+<script type="module">
+import { RESOURCES } from '../js/resources.js';
+import { COMPONENTS } from '../js/components.js';
+import { mountChrome, $, $$ } from '../js/ui.js';
+mountChrome('docs');
+$('#n-res').textContent = RESOURCES.length; $('#n-comp').textContent = Object.keys(COMPONENTS).length;
+const links = $$('.doc-tree a'); const heads = links.map(a => document.querySelector(a.getAttribute('href'))).filter(Boolean);
+const setActive = () => { let cur = heads[0]; for (const hd of heads) if (hd.getBoundingClientRect().top < 120) cur = hd; links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + cur.id)); };
+document.addEventListener('scroll', setActive, { passive: true }); setActive();
+</script>
+</body>
+</html>

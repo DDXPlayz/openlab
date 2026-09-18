@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cost-down — OPENLAB</title>
+<meta name="description" content="Enter a budget in rupees. OPENLAB's cost-down engine substitutes cheaper or salvaged components that keep each project working and shows exactly what changes.">
+<link rel="canonical" href="https://anantamracing.com/hackathon/openlab/costdown/">
+<meta name="theme-color" content="#f6f8fa">
+<meta property="og:title" content="Cost-down — OPENLAB">
+<meta property="og:description" content="Fit any STEM project to your budget with transparent component substitutions.">
+<link rel="icon" type="image/svg+xml" href="/hackathon/openlab/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/hackathon/openlab/openlab.css?v=3">
+<script>try{var t=JSON.parse(localStorage.getItem('openlab:v1')||'{}').theme;if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body>
+<main id="main" class="wrap page">
+  <h1>Cost-down mode</h1>
+  <p class="muted" style="max-width:70ch">Give the engine a budget. It replaces components from the most expensive downward with the cheapest alternative that keeps the project's core function, drops optional parts only if still over budget, and reports every change with its effect on what the project can do.</p>
+  <form id="budget-form" class="box" style="margin-bottom:1.5rem"><div class="box-body row" style="align-items:flex-end">
+    <div style="flex:1;min-width:200px"><label class="lbl" for="budget">I have</label><div class="input-prefix"><span>₹</span><input class="input mono" id="budget" type="number" min="0" step="10" inputmode="numeric" placeholder="300" required></div></div>
+    <div style="flex:2;min-width:220px"><label class="lbl" for="project">project</label><select class="input mono" id="project"><option value="">all projects (rank by achievable cost)</option></select></div>
+    <button class="btn btn-primary" type="submit">run cost-down</button>
+    <button class="btn" type="button" id="share">copy link</button>
+  </div></form>
+  <div id="out" aria-live="polite"></div>
+</main>
+<script type="module" src="../js/pages/costdown.js"></script>
+</body>
+</html>

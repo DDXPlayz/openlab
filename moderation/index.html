@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Moderation — OPENLAB</title>
+<meta name="description" content="Moderation queue for OPENLAB contributions, forks, improvements and issue reports, with approve / reject / needs-changes actions and an activity log. Runs locally.">
+<link rel="canonical" href="https://anantamracing.com/hackathon/openlab/moderation/">
+<meta name="theme-color" content="#f6f8fa">
+<meta property="og:title" content="Moderation — OPENLAB">
+<meta property="og:description" content="Review pending community contributions.">
+<link rel="icon" type="image/svg+xml" href="/hackathon/openlab/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/hackathon/openlab/openlab.css?v=3">
+<script>try{var t=JSON.parse(localStorage.getItem('openlab:v1')||'{}').theme;if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body>
+<main id="main" class="wrap page">
+  <div class="row-between"><h1>Moderation queue</h1><div class="row"><button class="btn btn-sm" type="button" id="export">export local data (JSON)</button><button class="btn btn-sm btn-danger" type="button" id="reset">reset local data</button></div></div>
+  <div class="callout callout-warn"><strong>Local, no accounts.</strong> This queue reads the same browser store the contribution forms write to, so you are moderating your own submissions. The structure — statuses, notes, an append-only log — is what a hosted deployment would put behind authentication. Nothing here is uploaded anywhere.</div>
+  <div class="cd-summary" id="counts" style="margin-bottom:1.5rem"></div>
+  <div class="layout-sidebar">
+    <div class="stack" id="queues"></div>
+    <aside><h2 style="font-size:1rem" class="mono">activity log</h2><div id="log"></div></aside>
+  </div>
+</main>
+<script type="module" src="../js/pages/moderation.js"></script>
+</body>
+</html>

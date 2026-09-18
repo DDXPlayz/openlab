@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contribute — OPENLAB</title>
+<meta name="description" content="Submit a new STEM project, fork and adapt an existing one, or propose improvements. Contributions are stored locally and queued for moderation.">
+<link rel="canonical" href="https://anantamracing.com/hackathon/openlab/contribute/">
+<meta name="theme-color" content="#f6f8fa">
+<meta property="og:title" content="Contribute — OPENLAB">
+<meta property="og:description" content="Submit, fork or improve open STEM projects.">
+<link rel="icon" type="image/svg+xml" href="/hackathon/openlab/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/hackathon/openlab/openlab.css?v=3">
+<script>try{var t=JSON.parse(localStorage.getItem('openlab:v1')||'{}').theme;if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body>
+<main id="main" class="wrap page">
+  <h1>Contribute</h1>
+  <div class="callout"><strong>Runs locally.</strong> Contributions are saved in this browser under <code>openlab:v1</code> with status <em>pending moderation</em> and appear in the <a href="../moderation/">moderation queue</a>. There is no server and no account; a hosted deployment would add authentication and a shared queue on top of exactly this structure.</div>
+  <div class="tabs" role="tablist" aria-label="Contribution type" id="mode-tabs">
+    <button role="tab" id="tab-new" aria-controls="panel-new" aria-selected="true">Submit a project</button>
+    <button role="tab" id="tab-fork" aria-controls="panel-fork" aria-selected="false" tabindex="-1">Fork / adapt</button>
+    <button role="tab" id="tab-improve" aria-controls="panel-improve" aria-selected="false" tabindex="-1">Propose improvement</button>
+    <button role="tab" id="tab-mine" aria-controls="panel-mine" aria-selected="false" tabindex="-1">My contributions</button>
+  </div>
+  <div role="tabpanel" id="panel-new" aria-labelledby="tab-new"></div>
+  <div role="tabpanel" id="panel-fork" aria-labelledby="tab-fork" hidden></div>
+  <div role="tabpanel" id="panel-improve" aria-labelledby="tab-improve" hidden></div>
+  <div role="tabpanel" id="panel-mine" aria-labelledby="tab-mine" hidden></div>
+</main>
+<script type="module" src="../js/pages/contribute.js"></script>
+</body>
+</html>

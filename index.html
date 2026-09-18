@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OPENLAB — Build more with what you already have</title>
+<meta name="description" content="An open STEM resource ecosystem: a searchable database of low-cost projects with components, code, CAD and safety notes, a cost-down engine that fits any project to your budget, and an inventory mode that shows what you can build right now.">
+<link rel="canonical" href="https://anantamracing.com/hackathon/openlab/">
+<meta name="theme-color" content="#f6f8fa">
+<meta property="og:title" content="OPENLAB — Build more with what you already have">
+<meta property="og:description" content="Open STEM projects with real components, code and CAD. Enter your budget or your parts drawer and see what you can build.">
+<link rel="icon" type="image/svg+xml" href="/hackathon/openlab/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/hackathon/openlab/openlab.css?v=3">
+<script>try{var t=JSON.parse(localStorage.getItem('openlab:v1')||'{}').theme;if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+</head>
+<body>
+<main id="main">
+  <section class="hero">
+    <div class="wrap">
+      <p class="tagline">$ openlab --help</p>
+      <h1>Build more with what you already have.</h1>
+      <p class="lede">OPENLAB is an open catalogue of STEM projects — physics, chemistry, biology, electronics, robotics, computing, maths and environmental science — with every component priced, every step written out, and real code and CAD files you can download. Tell it your budget or your parts drawer and it tells you what you can build.</p>
+      <div class="entry-grid">
+        <form class="entry" action="search/" method="get" id="entry-search">
+          <h2><span class="n">01</span> search the catalogue</h2>
+          <p>Titles, tags, components and steps are indexed. Prefix and fuzzy matching, so “spectrometr” still finds it.</p>
+          <label class="lbl" for="q">query</label>
+          <div class="search-box"><input class="input" id="q" name="q" type="search" placeholder="e.g. arduino servo, ph, robot" autocomplete="off"><button class="btn btn-primary" type="submit">search</button></div>
+          <p class="xs subtle" style="margin:.5rem 0 0" id="search-hints"></p>
+        </form>
+        <form class="entry" action="costdown/" method="get" id="entry-budget">
+          <h2><span class="n">02</span> I have ₹___</h2>
+          <p>The cost-down engine swaps expensive parts for cheaper or salvaged ones that keep the project working, and ranks every project by what it costs <em>you</em>.</p>
+          <label class="lbl" for="budget">budget (INR)</label>
+          <div class="search-box"><div class="input-prefix" style="flex:1"><span>₹</span><input class="input mono" id="budget" name="budget" type="number" min="0" step="10" placeholder="300" inputmode="numeric"></div><button class="btn btn-primary" type="submit">fit projects</button></div>
+          <p class="xs subtle" style="margin:.5rem 0 0" id="budget-hint"></p>
+        </form>
+        <form class="entry" action="inventory/" method="get" id="entry-inventory">
+          <h2><span class="n">03</span> what I already have</h2>
+          <p>List your parts; synonyms are understood (LDR = photoresistor). See what is buildable now, what is one part away, and what to buy next.</p>
+          <label class="lbl" for="have">inventory</label>
+          <textarea class="input mono" id="have" name="have" rows="2" placeholder="Arduino Uno, LDR, Servo, 2 LEDs, Cardboard"></textarea>
+          <div class="row" style="margin-top:.5rem"><button class="btn btn-primary" type="submit">match projects</button><button class="btn" type="button" id="use-example">use example</button></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><h2>The problem</h2><span class="mono xs muted">why this exists</span></div>
+    <div class="problem-grid">
+      <div class="card"><h3>No money</h3><p>A “simple” Arduino project on most tutorial sites lists a ₹2,000 bill of materials because it assumes a kit. Most of that cost is in two or three parts that have working substitutes.</p></div>
+      <div class="card"><h3>No equipment</h3><p>Schools have a drawer of odd parts: a servo, some LDRs, a broken toy motor. Nobody knows which projects that drawer already covers, so it stays a drawer.</p></div>
+      <div class="card"><h3>No idea what exists</h3><p>Free designs are scattered across forums, PDFs and videos with no structure: no component lists, no safety notes, no adaptations for a blind or low-vision student.</p></div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><h2>The catalogue</h2><a class="mono small" href="search/">browse everything →</a></div>
+    <div class="grid-3" id="stats" aria-live="polite"></div>
+    <h3 style="margin-top:1.5rem">Browse by subject</h3>
+    <div class="subject-grid" id="subjects"></div>
+  </section>
+
+  <section class="section wrap">
+    <div class="layout-sidebar" style="grid-template-columns: minmax(0,1fr) minmax(0,1fr)">
+      <div>
+        <div class="section-head"><h2>Activity</h2><span class="mono xs muted">this browser, real events</span></div>
+        <div id="activity"></div>
+      </div>
+      <div>
+        <div class="section-head"><h2>Recent catalogue changes</h2><span class="mono xs muted">from resource version histories</span></div>
+        <ul class="commit-list" id="changelog"></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section wrap">
+    <div class="section-head"><h2>How it works</h2><a class="mono small" href="docs/">read the docs →</a></div>
+    <div class="grid-3">
+      <div class="card"><h3 class="mono">resource = repo</h3><p>Every project is a structured record: components with quantities and unit prices, tools, ≥ 6 steps, code, CAD, safety, accessibility, license and a version history. Totals are computed, never typed.</p></div>
+      <div class="card"><h3 class="mono">cost-down</h3><p>Components carry ordered alternatives with a functionality-impact score. The engine replaces the most expensive lines first, keeps anything that would break the core function, drops optional parts last, and reports exactly what changed.</p></div>
+      <div class="card"><h3 class="mono">community, locally</h3><p>Submit projects, fork and adapt, propose improvements, rate and report issues. Everything is stored in this browser and flows through a moderation queue — no accounts, no server, no pretending.</p></div>
+    </div>
+  </section>
+</main>
+<script type="module" src="js/pages/home.js"></script>
+</body>
+</html>
