@@ -41,7 +41,7 @@ export function mountChrome(current) {
     <nav class="site-nav" id="site-nav" aria-label="Primary">
       ${NAV.map(([href, label]) => `<a href="${BASE}${href}" ${current === label ? 'aria-current="page"' : ''}>${label}${label === 'moderation' ? ' <span class="counter mod-count" hidden></span>' : ''}</a>`).join('')}
       <button class="theme-btn" type="button"></button>
-      <a class="back-hub" href="/hackathon/">← Back to Hackathon</a>
+      <a class="back-hub" href="https://hackathon.anantamracing.com/">← Back to Hackathon</a>
     </nav></div></header>`);
   document.body.prepend(header);
   const tb = header.querySelector('.theme-btn'); updateThemeBtn(tb); tb.addEventListener('click', toggleTheme);
@@ -50,7 +50,7 @@ export function mountChrome(current) {
   const footer = h(`<footer class="site-footer"><div class="wrap">
     <div><div class="foot-links"><a href="${BASE}">home</a><a href="${BASE}docs/">docs</a><a href="${BASE}docs/#licensing">licensing</a><a href="${BASE}docs/#accessibility">accessibility</a><a href="${BASE}contribute/">contribute</a></div>
     <p class="quiet" style="margin:.6rem 0 0">Resources are CC BY-SA 4.0 or MIT as marked. Prices are indicative INR street prices (2026). Everything on this site runs in your browser; nothing is uploaded.</p></div>
-    <div><p class="quiet" style="margin:0 0 .4rem">An independent project, supported and showcased by <a href="/hackathon/">Anantam Hackathon</a>.</p><a href="/hackathon/" class="mono small">← Back to Hackathon</a></div>
+    <div><p class="quiet" style="margin:0 0 .4rem">An independent project, supported and showcased by <a href="https://hackathon.anantamracing.com/">Anantam Hackathon</a>.</p><a href="https://hackathon.anantamracing.com/" class="mono small">← Back to Hackathon</a></div>
   </div></footer>`);
   document.body.append(footer);
   const refreshCount = () => { const c = store.pendingCounts(); const n = c.contributions + c.forks + c.improvements + c.issues; $$('.mod-count').forEach(el => { el.textContent = n; el.hidden = n === 0; }); };
