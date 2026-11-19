@@ -1,7 +1,12 @@
 // OPENLAB shared chrome: header, footer, theme toggle, helpers, code blocks, toasts.
 import { store } from './store.js';
 
-export const BASE = '/hackathon/openlab/';
+// The application root, derived rather than hardcoded. This module always
+// lives at <appRoot>/js/ui.js, so '../' relative to its own URL is the root
+// wherever the project is served from: '/hackathon/openlab/' in production,
+// '/' from a bare clone on a local server, '/openlab/' on a project page.
+// Every nav link, breadcrumb, resource URL and CAD fetch is built from this.
+export const BASE = new URL('../', import.meta.url).pathname;
 export const esc = s => String(s ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
 export const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
 export const $ = (sel, root = document) => root.querySelector(sel);
