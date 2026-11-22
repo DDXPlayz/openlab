@@ -7,6 +7,11 @@ what you can build *right now* from parts you already own.
 
 **[Try it → anantamracing.com/hackathon/openlab/](https://anantamracing.com/hackathon/openlab/)**
 
+![openlab screenshot](docs/catalogue.jpg)
+
+*Three ways in: search the catalogue, give it a budget and let the cost-down engine fit projects to it, or list the parts you already own and be told what is buildable now.*
+
+
 An independent project, supported and showcased by
 [Anantam Hackathon](https://hackathon.anantamracing.com/).
 
